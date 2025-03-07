@@ -1,42 +1,41 @@
-import { View, Text } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import TpStreamsPlayerView from 'react-native-tpstreams';
-import type { PlayerProps } from 'react-native-tpstreams';
+import type { TpStreamsPlayerProps } from 'react-native-tpstreams';
 
 const App = () => {
-  const playerProps: PlayerProps = {
-    source: {
-      uri: 'https://example.com/video.mp4',
-      drm: {
-        type: 'widevine',
-        licenseServer: 'https://example.com/license',
-        headers: {
-          Authorization: 'Bearer your_token',
-        },
-      },
-    },
-    style: { width: '100%', height: 200 },
+  const playerProps: TpStreamsPlayerProps = {
+    videoId: '8r65J7EY6NP',
+    accessToken: 'c4936043-816a-4404-b165-d7336672e7a7',
+    style: { width: '100%', height: 300 },
   };
 
   return (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: 'flex-start',
-        alignItems: 'center',
-        paddingTop: 20,
-      }}
-    >
-      <Text
-        style={{
-          fontSize: 18,
-          fontWeight: 'bold',
-        }}
-      >
-        Example Player
-      </Text>
-      <TpStreamsPlayerView {...playerProps} />
+    <View style={styles.container}>
+      <View style={styles.playerContainer}>
+        <TpStreamsPlayerView {...playerProps} />
+      </View>
+      <Text style={styles.text}>Tp Streams⚡</Text>
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  playerContainer: {
+    flex: 1,
+    width: '100%',
+    height: 300,
+    alignItems: 'center',
+  },
+  text: {
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+});
 
 export default App;
