@@ -16,3 +16,9 @@ export type PlayerProps = {
   source: Source;
   style?: import('react-native').ViewStyle;
 };
+
+export type TpStreamsPlayerProps = {
+  videoId: string;
+  accessToken: string;
+  style?: import('react-native').ViewStyle;
+};
