@@ -1,12 +1,29 @@
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Button } from 'react-native';
+import { useState } from 'react';
 import TpStreamsPlayerView from 'react-native-tpstreams';
 import type { TpStreamsPlayerProps } from 'react-native-tpstreams';
 
 const App = () => {
-  const playerProps: TpStreamsPlayerProps = {
-    videoId: '68PAFnYTjSU',
-    accessToken: '5f3ded52-ace8-487e-809c-10de895872d6',
+  const [playerProps, setPlayerProps] = useState<TpStreamsPlayerProps>({
+    videoId: '95hBGFAhQYR',
+    accessToken: '7d4e2ffb-3492-4cd4-8e5c-41b7af2f3e7f',
     style: { width: '100%', height: 300 },
+  });
+
+  const handleDrmVideo = () => {
+    setPlayerProps({
+      videoId: 'YtuNKqjgK9D',
+      accessToken: 'fd591e6b-be1d-4703-929a-a6188540cfed',
+      style: { width: '100%', height: 300 },
+    });
+  };
+
+  const handleNonDrmVideo = () => {
+    setPlayerProps({
+      videoId: '8yCHhR2CY6t',
+      accessToken: 'e55805b7-84a8-4270-bf21-bdd6f1d346af',
+      style: { width: '100%', height: 300 },
+    });
   };
 
   return (
@@ -15,6 +32,10 @@ const App = () => {
         <TpStreamsPlayerView {...playerProps} />
       </View>
       <Text style={styles.text}>Tp Streams⚡</Text>
+      <View style={styles.buttonContainer}>
+        <Button title="DRM Video" onPress={handleDrmVideo} />
+        <Button title="Non-DRM Video" onPress={handleNonDrmVideo} />
+      </View>
     </View>
   );
 };
@@ -36,6 +57,14 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
   },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 50,
+    marginLeft:10,
+    marginRight: 10,
+    gap: 10,
+  },
 });
-
 export default App;
