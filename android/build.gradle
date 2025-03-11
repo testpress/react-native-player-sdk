@@ -15,6 +15,16 @@ buildscript {
   }
 }
 
+rootProject.allprojects {
+    repositories {
+        mavenCentral()  // Ensure this line is here
+        google()
+        maven {
+            url "https://github.com/testpress/maven/raw/main/repo"
+        }
+    }
+}
+
 
 def isNewArchitectureEnabled() {
   return rootProject.hasProperty("newArchEnabled") && rootProject.getProperty("newArchEnabled") == "true"
@@ -100,7 +110,7 @@ def kotlin_version = getExtOrDefault("kotlinVersion")
 dependencies {
   implementation "com.facebook.react:react-android"
   implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-  api "com.tpstreams.player:player:3.1.4"
+  implementation "com.tpstreams.player:player:3.1.4"
 }
 
 if (isNewArchitectureEnabled()) {

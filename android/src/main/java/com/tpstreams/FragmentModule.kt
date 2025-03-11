@@ -22,11 +22,6 @@ class FragmentModule(reactContext: ReactApplicationContext) : ReactContextBaseJa
   lateinit var viewModel: DownloadListViewModel
   private var assets = listOf<Asset>()
 
-  init {
-    TPStreamsSDK.initialize(TPStreamsSDK.Provider.TPStreams, "6eafqn")
-    Log.d("FragmentModule", "FragmentModule loaded successfully")
-  }
-
   override fun initialize() {
     super.initialize()
     (currentActivity as? FragmentActivity)?.let {
