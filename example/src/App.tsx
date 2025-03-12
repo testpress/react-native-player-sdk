@@ -4,6 +4,8 @@ import TpStreamsPlayerView from 'react-native-tpstreams';
 import type { TpStreamsPlayerProps } from 'react-native-tpstreams';
 
 const App = () => {
+  const [showPlayer, setShowPlayer] = useState(true); // Toggle visibility
+
   const [playerProps, setPlayerProps] = useState<TpStreamsPlayerProps>({
     videoId: '95hBGFAhQYR',
     accessToken: '7d4e2ffb-3492-4cd4-8e5c-41b7af2f3e7f',
@@ -16,6 +18,7 @@ const App = () => {
       accessToken: 'fd591e6b-be1d-4703-929a-a6188540cfed',
       style: { width: '100%', height: 300 },
     });
+    setShowPlayer(true); // Ensure player is shown
   };
 
   const handleNonDrmVideo = () => {
@@ -24,17 +27,23 @@ const App = () => {
       accessToken: 'e55805b7-84a8-4270-bf21-bdd6f1d346af',
       style: { width: '100%', height: 300 },
     });
+    setShowPlayer(true); // Ensure player is shown
   };
 
   return (
     <View style={styles.container}>
       <View style={styles.playerContainer}>
-        <TpStreamsPlayerView {...playerProps} />
+        {showPlayer && <TpStreamsPlayerView {...playerProps} />}
       </View>
       <Text style={styles.text}>Tp Streams⚡</Text>
       <View style={styles.buttonContainer}>
         <Button title="DRM Video" onPress={handleDrmVideo} />
         <Button title="Non-DRM Video" onPress={handleNonDrmVideo} />
+        <Button
+          title={showPlayer ? 'Remove Player' : 'Show Player'}
+          onPress={() => setShowPlayer(!showPlayer)}
+          color="red"
+        />
       </View>
     </View>
   );
