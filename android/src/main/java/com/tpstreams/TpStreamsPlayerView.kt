@@ -39,7 +39,14 @@ class TpStreamsPlayerView @JvmOverloads constructor(
 
     private fun updateFragment() {
         if (!videoId.isNullOrEmpty() && !accessToken.isNullOrEmpty()) {
+            fragmentModule?.closeCustomFragment()
             fragmentModule?.showCustomFragment(videoId!!, accessToken!!)
         }
     }
+
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        fragmentModule?.closeCustomFragment()
+    }
+    
 }
