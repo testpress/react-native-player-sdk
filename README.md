@@ -12,11 +12,27 @@ npm install react-native-tpstreams
 
 
 ```js
-import { multiply } from 'react-native-tpstreams';
+import React, { useState } from 'react';
+import { NativeModules } from 'react-native';
+import TpStreamsPlayerView from 'react-native-tpstreams';
 
-// ...
+const { Tpstreams } = NativeModules;
 
-const result = multiply(3, 7);
+// Initialize the player with your organization UUID
+Tpstreams.initializeTPSPlayer("ORGANIZATION_ID");
+
+const App = () => {
+  const [playerProps, setPlayerProps] = useState({
+    videoId: 'ASSET_ID',
+    accessToken: 'ACCESS_TOKEN',
+    style: { width: '100%', height: 300 },
+  });
+
+  return <TpStreamsPlayerView {...playerProps} />;
+};
+
+export default App;
+
 ```
 
 
