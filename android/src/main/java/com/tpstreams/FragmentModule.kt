@@ -65,24 +65,29 @@ class FragmentModule(reactContext: ReactApplicationContext) : ReactContextBaseJa
 
   @ReactMethod
   fun closeCustomFragment() {
-    Log.e("FragmentModule", "closeCustomFragment() called")
-    // Ensure the currentActivity is a FragmentActivity
-    val activity = currentActivity as? FragmentActivity
-    activity?.let {
-      // Access the fragment manager
-      val fragmentManager = it.supportFragmentManager
-
-      // Check if there are any fragments in the back stack
-      if (fragmentManager.backStackEntryCount > 0) {
-        // Pop the last fragment off the back stack
-        fragmentManager.popBackStack()
-      } else {
-        Log.e("FragmentModule", "No fragments in the back stack to remove")
+      Log.e("FragmentModule", "closeCustomFragment() called")
+  
+      // Ensure currentActivity is a FragmentActivity
+      val activity = currentActivity as? FragmentActivity
+      if (activity == null || activity.isFinishing || activity.isDestroyed) {
+          Log.e("FragmentModule", "Activity is null, finishing, or destroyed")
+          return
       }
-    } ?: run {
-      // Handle the error if the activity is not a FragmentActivity
-      Log.e("ReactNativeJS", "Current activity is not a FragmentActivity")
-    }
+  
+      val fragmentManager = activity.supportFragmentManager
+      val playerFragment = fragmentManager.findFragmentByTag("PLAYER_FRAGMENT") as? PlayerFragment
+  
+      if (playerFragment != null) {
+          Log.d("FragmentModule", "Removing PlayerFragment")
+          fragmentManager.beginTransaction()
+              .remove(playerFragment)
+              .commitAllowingStateLoss() // Avoid IllegalStateException
+      } else if (fragmentManager.backStackEntryCount > 0) {
+          Log.d("FragmentModule", "Popping back stack")
+          fragmentManager.popBackStack()
+      } else {
+          Log.e("FragmentModule", "No fragments to remove")
+      }
   }
 
   @ReactMethod
