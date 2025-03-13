@@ -16,6 +16,8 @@ const App = () => {
     setPlayerProps({
       videoId: 'YtuNKqjgK9D',
       accessToken: 'fd591e6b-be1d-4703-929a-a6188540cfed',
+      enableDownload: true,
+      autoPlay: true,
       style: { width: '100%', height: 300 },
     });
     setShowPlayer(true); // Ensure player is shown
@@ -25,9 +27,11 @@ const App = () => {
     setPlayerProps({
       videoId: '8yCHhR2CY6t',
       accessToken: 'e55805b7-84a8-4270-bf21-bdd6f1d346af',
+      enableDownload: false,
+      autoPlay: false,
       style: { width: '100%', height: 300 },
     });
-    setShowPlayer(true); // Ensure player is shown
+    setShowPlayer(true);
   };
 
   return (

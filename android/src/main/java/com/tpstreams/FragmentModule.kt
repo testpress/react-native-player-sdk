@@ -35,7 +35,7 @@ class FragmentModule(reactContext: ReactApplicationContext) : ReactContextBaseJa
   }
 
   @ReactMethod
-  fun showCustomFragment(videoId: String, accessToken: String) {
+  fun showCustomFragment(videoId: String, accessToken: String, enableDownload: Boolean, autoPlay: Boolean) {
     Log.e("FragmentModule", "showCustomFragment() called")
     // Ensure the currentActivity is a FragmentActivity
     val activity = currentActivity as? FragmentActivity
@@ -47,6 +47,8 @@ class FragmentModule(reactContext: ReactApplicationContext) : ReactContextBaseJa
       val bundle = Bundle()
       bundle.putString("VIDEO_ID", videoId)
       bundle.putString("ACCESS_TOKEN", accessToken)
+      bundle.putBoolean("ENABLE_DOWNLOAD_SUPPORT", enableDownload)
+      bundle.putBoolean("AUTO_PLAY", autoPlay)
       val fragment = PlayerFragment()
       fragment.setArguments(bundle)
 

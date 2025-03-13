@@ -21,6 +21,8 @@ class PlayerFragment : Fragment() {
   lateinit var playerFragment: TpStreamPlayerFragment
   private var videoId :String = ""
   private var accessToken :String = ""
+  private var enableDownloadSupport :Boolean = true
+  private var setAutoPlay :Boolean = true
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -28,6 +30,9 @@ class PlayerFragment : Fragment() {
     if (bundle != null) {
       videoId = bundle.getString("VIDEO_ID") ?: ""
       accessToken = bundle.getString("ACCESS_TOKEN") ?: ""
+      enableDownloadSupport = bundle.getBoolean("ENABLE_DOWNLOAD_SUPPORT", true)
+      setAutoPlay = bundle.getBoolean("AUTO_PLAY", true)
+
     }
   }
 
@@ -56,8 +61,8 @@ class PlayerFragment : Fragment() {
     val parameters = TpInitParams.Builder()
       .setVideoId(videoId)
       .setAccessToken(accessToken)
-      .enableDownloadSupport(true)
-      .setAutoPlay(true)
+      .enableDownloadSupport(enableDownloadSupport)
+      .setAutoPlay(setAutoPlay)
       .build()
     player.load(parameters)
   }

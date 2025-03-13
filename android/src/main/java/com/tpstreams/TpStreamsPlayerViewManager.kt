@@ -21,6 +21,17 @@ class TpStreamsPlayerViewManager : SimpleViewManager<TpStreamsPlayerView>() {
     fun setAccessToken(view: TpStreamsPlayerView, accessToken: String?) {
         accessToken?.let { view.setAccessToken(it) }
     }
+    
+    @ReactProp(name = "enableDownload")
+    fun setEnableDownload(view: TpStreamsPlayerView, enableDownload: Boolean?) {
+        view.setEnableDownload(enableDownload)
+    }
+
+    @ReactProp(name = "autoPlay")
+    fun setAutoPlay(view: TpStreamsPlayerView, autoPlay: Boolean?) {
+        view.setAutoPlay(autoPlay)
+    }
+
 }
 
 

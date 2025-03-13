@@ -14,6 +14,8 @@ class TpStreamsPlayerView @JvmOverloads constructor(
 
     private var videoId: String? = null
     private var accessToken: String? = null
+    private var enableDownload: Boolean = true
+    private var autoPlay :Boolean = true
     private var fragmentModule: FragmentModule? = null
 
     init {
@@ -37,10 +39,20 @@ class TpStreamsPlayerView @JvmOverloads constructor(
         updateFragment()
     }
 
+    fun setEnableDownload(enableDownload: Boolean?) {
+        this.enableDownload = enableDownload ?: true
+        updateFragment()
+    }
+
+    fun setAutoPlay(autoPlay: Boolean?) {
+        this.autoPlay = autoPlay ?: true
+        updateFragment()
+    }
+
     private fun updateFragment() {
         if (!videoId.isNullOrEmpty() && !accessToken.isNullOrEmpty()) {
             fragmentModule?.closeCustomFragment()
-            fragmentModule?.showCustomFragment(videoId!!, accessToken!!)
+            fragmentModule?.showCustomFragment(videoId!!, accessToken!!, enableDownload, autoPlay)
         }
     }
 
