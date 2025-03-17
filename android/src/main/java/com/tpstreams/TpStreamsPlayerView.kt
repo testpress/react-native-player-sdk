@@ -1,5 +1,6 @@
 package com.tpstreams
 
+import kotlinx.coroutines.*
 import android.content.Context
 import android.util.AttributeSet
 import android.widget.FrameLayout
@@ -10,13 +11,17 @@ import com.facebook.react.uimanager.ThemedReactContext
 class TpStreamsPlayerView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null
-) : FrameLayout(context, attrs) {
+) : FrameLayout(context, attrs), CoroutineScope {
 
     private var videoId: String? = null
     private var accessToken: String? = null
     private var enableDownload: Boolean = true
     private var autoPlay :Boolean = true
     private var fragmentModule: FragmentModule? = null
+
+    private val job = SupervisorJob()
+    override val coroutineContext = Dispatchers.Main + job
+    private var updateJob: Job? = null
 
     init {
         if (context is ThemedReactContext) {
@@ -51,13 +56,23 @@ class TpStreamsPlayerView @JvmOverloads constructor(
 
     private fun updateFragment() {
         if (!videoId.isNullOrEmpty() && !accessToken.isNullOrEmpty()) {
-            fragmentModule?.closeCustomFragment()
-            fragmentModule?.showCustomFragment(videoId!!, accessToken!!, enableDownload, autoPlay)
+            updateJob?.cancel()
+            updateJob = launch {
+                delay(50)
+                fragmentModule?.closeCustomFragment()
+                fragmentModule?.showCustomFragment(
+                    videoId!!,
+                    accessToken!!,
+                    enableDownload,
+                    autoPlay ?: true
+                )
+            }
         }
     }
 
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
+        coroutineContext.cancel()
         fragmentModule?.closeCustomFragment()
     }
     
