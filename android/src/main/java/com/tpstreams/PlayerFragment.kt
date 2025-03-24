@@ -24,6 +24,10 @@ class PlayerFragment : Fragment() {
   private var enableDownloadSupport :Boolean = true
   private var setAutoPlay :Boolean = true
 
+  companion object {
+    var instance: PlayerFragment? = null
+  }
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     val bundle = arguments
@@ -45,6 +49,7 @@ class PlayerFragment : Fragment() {
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
+    instance = this
     playerFragment = childFragmentManager.findFragmentById(R.id.tpstream_player_fragment) as TpStreamPlayerFragment
     playerFragment.setOnInitializationListener(object: InitializationListener {
 
@@ -64,7 +69,9 @@ class PlayerFragment : Fragment() {
       .enableDownloadSupport(enableDownloadSupport)
       .setAutoPlay(setAutoPlay)
       .build()
-    player.load(parameters)
+    requireActivity().runOnUiThread {
+      player.load(parameters)
+    }
   }
 
   private fun addPlayerListener(){
@@ -78,9 +85,68 @@ class PlayerFragment : Fragment() {
       }
 
       override fun onMarkerCallback(timesInSeconds: Long) {
-        Toast.makeText(requireContext(),"Time $timesInSeconds", Toast.LENGTH_SHORT).show()
+        requireActivity().runOnUiThread {
+          Toast.makeText(requireContext(),"Time $timesInSeconds", Toast.LENGTH_SHORT).show()
+        }
       }
     })
+  }
+  // Core Player Controls
+  fun play() {
+    requireActivity().runOnUiThread {
+        player.play()
+    }
+  }
+
+  fun pause() {
+    requireActivity().runOnUiThread {
+        player.pause()
+    }
+  }
+
+  fun seekTo(position: Long) {
+    requireActivity().runOnUiThread {
+        player.seekTo(position)
+    }
+  }
+
+  fun release() {
+    requireActivity().runOnUiThread {
+        player.release()
+    }
+  }
+
+  fun load(params: TpInitParams) {
+    requireActivity().runOnUiThread {
+        player.load(params)
+    }
+  }
+
+  // Playback & State Management
+  fun getCurrentTime(): Double = player.getCurrentTime().toDouble()
+
+  fun getDuration(): Double = player.getDuration().toDouble()
+
+  fun getBufferedTime(): Double = player.getBufferedTime().toDouble()
+
+  fun getPlaybackState(): Int = player.getPlaybackState()
+
+  fun getPlayWhenReady(): Boolean = player.getPlayWhenReady()
+
+  fun setPlayWhenReady(playWhenReady: Boolean) {
+    requireActivity().runOnUiThread {
+        player.setPlayWhenReady(playWhenReady)
+    }
+  }
+
+
+  // Speed & Volume
+  fun getPlaybackSpeed(): Float = player.getPlayBackSpeed()
+
+  fun setPlaybackSpeed(speed: Float) {
+    requireActivity().runOnUiThread {
+        player.setPlaybackSpeed(speed)
+    }
   }
 
   override fun onResume() {
@@ -90,6 +156,7 @@ class PlayerFragment : Fragment() {
 
   override fun onDestroy() {
     super.onDestroy()
+    instance = null
     Log.d("ReactNativeJS", "onDestroy: ")
   }
 
