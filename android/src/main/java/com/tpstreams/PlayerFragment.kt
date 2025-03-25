@@ -13,6 +13,11 @@ import com.tpstream.player.TpStreamPlayer
 import com.tpstream.player.ui.InitializationListener
 import com.tpstream.player.ui.TPStreamPlayerView
 import com.tpstream.player.ui.TpStreamPlayerFragment
+import com.tpstream.player.constants.PlaybackError
+import com.tpstream.player.Tracks
+import com.tpstream.player.Timeline
+import com.tpstream.player.DeviceInfo
+import com.tpstreams.TpstreamsModule
 
 class PlayerFragment : Fragment() {
 
@@ -74,13 +79,18 @@ class PlayerFragment : Fragment() {
     }
   }
 
+  private fun sendEvent(eventName: String, params: Any?) {
+    TpstreamsModule.sendEvent(eventName, params)
+  }
+
   private fun addPlayerListener(){
     player.setListener( object : TPStreamPlayerListener {
       override fun onPlaybackStateChanged(playbackState: Int) {
-        Log.d("TAG", "onPlaybackStateChanged: $playbackState")
+        sendEvent("onPlaybackStateChanged", playbackState)
       }
 
       override fun onAccessTokenExpired(videoId: String, callback: (String) -> Unit) {
+        sendEvent("onAccessTokenExpired", videoId)
         callback(accessToken)
       }
 
@@ -88,6 +98,43 @@ class PlayerFragment : Fragment() {
         requireActivity().runOnUiThread {
           Toast.makeText(requireContext(),"Time $timesInSeconds", Toast.LENGTH_SHORT).show()
         }
+        sendEvent("onMarkerCallback", timesInSeconds)
+      }
+
+      override fun onDeviceInfoChanged(deviceInfo: DeviceInfo) {
+        sendEvent("onDeviceInfoChanged", deviceInfo.toString())
+      }
+
+      override fun onFullScreenChanged(isFullScreen: Boolean) {
+        sendEvent("onFullScreenChanged", isFullScreen)
+      }
+
+      override fun onIsLoadingChanged(isLoading: Boolean) {
+        sendEvent("onIsLoadingChanged", isLoading)
+      }
+
+      override fun onIsPlayingChanged(isPlaying: Boolean) {
+        sendEvent("onIsPlayingChanged", isPlaying)
+      }
+
+      override fun onPlayerError(playbackError: PlaybackError) {
+        sendEvent("onPlayerError", playbackError.toString())
+      }
+
+      override fun onSeekBackIncrementChanged(incrementMs: Long) {
+        sendEvent("onSeekBackIncrementChanged", incrementMs)
+      }
+
+      override fun onSeekForwardIncrementChanged(incrementMs: Long) {
+        sendEvent("onSeekForwardIncrementChanged", incrementMs)
+      }
+
+      override fun onTimelineChanged(timeline: Timeline, reason: Int) {
+        sendEvent("onTimelineChanged", null)
+      }
+
+      override fun onTracksChanged(tracks: Tracks) {
+        sendEvent("onTracksChanged", tracks.toString())
       }
     })
   }

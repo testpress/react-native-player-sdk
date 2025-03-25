@@ -9,10 +9,13 @@ import com.facebook.react.bridge.ReactMethod
 import com.tpstream.player.TPStreamsSDK
 import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.Arguments
+import com.facebook.react.modules.core.DeviceEventManagerModule
+import com.facebook.react.bridge.ReactContext
 
 @ReactModule(name = TpstreamsModule.NAME)
 class TpstreamsModule(reactContext: ReactApplicationContext) :
   ReactContextBaseJavaModule(reactContext) { 
+  private val listeners = mutableSetOf<String>()
 
   init {
     companionReactContext = reactContext
@@ -20,6 +23,22 @@ class TpstreamsModule(reactContext: ReactApplicationContext) :
 
   override fun getName(): String {
     return NAME
+  }
+
+  @ReactMethod
+  fun addListener(eventName: String?) {
+    eventName?.let {
+      listeners.add(it)
+    }
+  }
+
+  @ReactMethod
+  fun removeListeners(count: Int) {
+    for (i in 0 until count) {
+      if (listeners.isNotEmpty()) {
+        listeners.remove(listeners.first())
+      }
+    }
   }
 
   @ReactMethod
@@ -133,6 +152,10 @@ class TpstreamsModule(reactContext: ReactApplicationContext) :
 
   companion object {
     const val NAME = "Tpstreams"
-        var companionReactContext: ReactApplicationContext? = null
+    var companionReactContext: ReactApplicationContext? = null
+    fun sendEvent(eventName: String, params: Any?) {
+        companionReactContext?.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
+        ?.emit(eventName, params)
+    }
   }
 }
