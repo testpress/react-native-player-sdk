@@ -19,6 +19,8 @@ import com.tpstream.player.Timeline
 import com.tpstream.player.DeviceInfo
 import com.tpstreams.TpstreamsModule
 
+internal typealias onAccessTokenCallbase = (String) -> Unit
+
 class PlayerFragment : Fragment() {
 
   lateinit var player: TpStreamPlayer
@@ -28,6 +30,8 @@ class PlayerFragment : Fragment() {
   private var accessToken :String = ""
   private var enableDownloadSupport :Boolean = true
   private var setAutoPlay :Boolean = true
+
+  private var accessTokenCallback : onAccessTokenCallbase? = null
 
   companion object {
     var instance: PlayerFragment? = null
@@ -90,8 +94,9 @@ class PlayerFragment : Fragment() {
       }
 
       override fun onAccessTokenExpired(videoId: String, callback: (String) -> Unit) {
+        Log.d("ReactNativeJS", "onTokenExpired: $videoId")
+        accessTokenCallback = callback
         sendEvent("onAccessTokenExpired", videoId)
-        callback(accessToken)
       }
 
       override fun onMarkerCallback(timesInSeconds: Long) {
@@ -194,6 +199,11 @@ class PlayerFragment : Fragment() {
     requireActivity().runOnUiThread {
         player.setPlaybackSpeed(speed)
     }
+  }
+
+  fun setNewAccessToken(token: String) {
+    accessTokenCallback?.invoke(token)
+    accessTokenCallback = null
   }
 
   override fun onResume() {

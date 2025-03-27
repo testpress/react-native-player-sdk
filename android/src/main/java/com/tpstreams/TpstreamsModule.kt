@@ -142,6 +142,13 @@ class TpstreamsModule(reactContext: ReactApplicationContext) :
       }
   }
 
+  @ReactMethod
+  fun setNewAccessToken(token: String) {
+    runOnMainThread {
+        getPlayerFragment()?.setNewAccessToken(token)
+    }
+  }
+
   private fun getPlayerFragment(): PlayerFragment? {
       return PlayerFragment.instance?.takeIf { it.player != null }
   }
