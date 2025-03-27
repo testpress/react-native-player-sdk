@@ -7,7 +7,7 @@ import com.facebook.react.uimanager.ViewManager
 
 class TpstreamsPackage : ReactPackage {
   override fun createNativeModules(reactContext: ReactApplicationContext): List<NativeModule> {
-      return listOf(TpstreamsModule(reactContext))
+      return listOf(TpstreamsModule(reactContext), FragmentModule(reactContext))
   }
 
   override fun createViewManagers(reactContext: ReactApplicationContext): List<ViewManager<*, *>> {
