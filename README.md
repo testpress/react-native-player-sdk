@@ -8,17 +8,31 @@ Video Component for TPStreams
 npm install react-native-tpstreams
 ```
 
-## Usage
+### Initializing TPStreams SDK
 
-```js
-import React, { useState } from 'react';
-import { View, Button, StyleSheet, NativeModules } from 'react-native';
-import TpStreamsPlayerView from 'react-native-tpstreams';
+First, import the package:
 
+```javascript
+import { NativeModules } from 'react-native';
 const { Tpstreams } = NativeModules;
+```
 
-// Initialize the player with your organization UUID
-Tpstreams.initializeTPSPlayer("ORGANIZATION_ID");
+Next, initialize the SDK with your organization ID:
+
+```javascript
+Tpstreams.initializeTPSPlayer("YOUR_ORGANIZATION_ID");
+```
+
+Make sure to replace `YOUR_ORGANIZATION_ID` with your actual organization ID. This should be called at the entry point of your application to ensure proper initialization.
+
+## Play a Video
+
+To play a video using the TPStreams Player SDK, use the `TpStreamsPlayerView` component:
+
+```javascript
+import React, { useState } from 'react';
+import { View, StyleSheet } from 'react-native';
+import TpStreamsPlayerView from 'react-native-tpstreams';
 
 const App = () => {
   const [playerProps] = useState({
@@ -32,16 +46,6 @@ const App = () => {
   return (
     <View style={styles.container}>
       <TpStreamsPlayerView {...playerProps} />
-      <View style={styles.buttonContainer}>
-        <Button title="Play" onPress={() => Tpstreams.play()} />
-        <Button title="Pause" onPress={() => Tpstreams.pause()} />
-        <Button title="Seek to 10s" onPress={() => Tpstreams.seekTo(10000)} />
-        <Button title="Get Current Time" onPress={() => Tpstreams.getCurrentTime().then(console.log)} />
-        <Button title="Get Duration" onPress={() => Tpstreams.getDuration().then(console.log)} />
-        <Button title="Get Playback Speed" onPress={() => Tpstreams.getPlaybackSpeed().then(console.log)} />
-        <Button title="Set Speed 1.5x" onPress={() => Tpstreams.setPlaybackSpeed(1.5)} />
-        <Button title="Set Speed 1x" onPress={() => Tpstreams.setPlaybackSpeed(1.0)} />
-      </View>
     </View>
   );
 };
@@ -52,99 +56,372 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  buttonContainer: {
-    marginTop: 20,
-    width: '90%',
-  },
 });
 
 export default App;
 ```
 
+Replace `ASSET_ID` and `ACCESS_TOKEN` with the actual assetId and accessToken of the video you wish to play.
 
 ## Player Props
-
 The player component accepts the following props:
 
-### `videoId` (string, required)
-The unique identifier of the video asset to be played.
+| Prop            | Type    | Required | Default                         | Description                                    |
+|----------------|---------|----------|---------------------------------|------------------------------------------------|
+| `videoId`      | string  | Yes      | -                               | The unique identifier of the video asset.      |
+| `accessToken`  | string  | Yes      | -                               | The authentication token required to access the video. |
+| `enableDownload` | boolean | No     | `true`                          | Enables or disables video download.           |
+| `autoPlay`     | boolean | No      | `true`                          | Controls whether the video should start playing automatically. |
+| `style`        | object  | No      | `{ width: '100%', height: 300 }` | Defines the player’s width and height.        |
 
-### `accessToken` (string, required)
-The authentication token required to access the video.
+# Player Methods
 
-### `enableDownload` (boolean, optional, default: `true`)
-Determines whether the video can be downloaded.  
-- `true` → Enables download functionality (default).  
-- `false` → Disables downloads.
+To use the `Tpstreams` module, first import `NativeModules` from `react-native` and get the `Tpstreams` instance:
 
-### `autoPlay` (boolean, optional, default: `true`)
-Controls whether the video should start playing automatically when loaded.  
-- `true` → Video starts playing automatically (default).  
-- `false` → User must manually start playback.
-
-### `style` (object, optional)
-Defines the player’s width and height.  
-Example:  
 ```js
-style: { width: 600, height: 300 }
+import { NativeModules } from 'react-native';
+const { Tpstreams } = NativeModules;
 ```
-## Player Methods
 
-### `play()`
-Starts video playback from the current position.
+The `Tpstreams` module provides several methods to control video playback and manage player states. Below is a detailed explanation of each method:
 
-### `pause()`
-Pauses video playback, allowing it to be resumed later.
+## Play
 
-### `seekTo(position: Double)`
-Seeks to a specific position in the video (in milliseconds).  
-For example, `seekTo(10000)` moves the playback to 10 seconds.
+```js
+Tpstreams.play();
+```
 
-### `getCurrentTime(promise: Promise)`
-Gets the current playback time (in milliseconds).  
-Returns a promise that resolves with the current position of the video.
+Starts video playback. Call this method when you want the video to start playing or resume after being paused.
 
-### `getDuration(promise: Promise)`
-Retrieves the total duration of the video (in milliseconds).  
-Returns a promise that resolves with the length of the video.
+## Pause
 
-### `getBufferedTime(promise: Promise)`
-Gets the amount of video data that has been buffered (in milliseconds).  
-Returns a promise with the buffered time to help manage network-based playback issues.
+```js
+Tpstreams.pause();
+```
 
-### `getPlaybackState(promise: Promise)`
-Gets the current playback state of the player (e.g., playing, paused, buffering).  
-Returns a promise that resolves with a state value.
+Pauses video playback, allowing it to be resumed later from the same position.
 
-### `getPlayWhenReady(promise: Promise)`
-Checks whether the player is set to start playback automatically.  
-Returns a boolean promise (`true` if autoplay is enabled).
+## Seek To
 
-### `setPlayWhenReady(playWhenReady: Boolean)`
-Controls whether the player should automatically start playback when loaded.  
-Pass `true` to enable autoplay or `false` to disable it.
+```js
+Tpstreams.seekTo(position: number);
+```
 
-### `getPlaybackSpeed(promise: Promise)`
-Gets the current playback speed of the video.  
-Returns a promise resolving with the playback speed (e.g., `1.0` for normal speed, `1.5` for 1.5x speed).
+Seeks to a specific position in the video (in milliseconds).
 
-### `setPlaybackSpeed(speed: Float)`
-Changes the playback speed of the video.  
-For example, `setPlaybackSpeed(2.0)` doubles the speed, while `setPlaybackSpeed(0.5)` slows it down.
+**Example Usage:**
 
-### `release()`
-Releases the player resources, stopping playback and hiding the player UI.  
-Once called, the player cannot be used again unless reinitialized.
+```js
+Tpstreams.seekTo(10000); // Jump to the 10-second mark
+```
+
+## Get Current Time
+
+```js
+Tpstreams.getCurrentTime().then(console.log);
+```
+
+Gets the current playback position of the video (in milliseconds). Returns a promise that resolves with the current time.
+
+## Get Duration
+
+```js
+Tpstreams.getDuration().then(console.log);
+```
+
+Retrieves the total duration of the currently loaded video (in milliseconds). Returns a promise that resolves with the total duration.
+
+## Get Buffered Time
+
+```js
+Tpstreams.getBufferedTime().then(console.log);
+```
+
+Gets the amount of video data that has been buffered (in milliseconds). Returns a promise that resolves with the buffered time.
+
+## Get Playback State
+
+```js
+Tpstreams.getPlaybackState().then(console.log);
+```
+
+Gets the current playback state of the player (e.g., `playing`, `paused`, `buffering`). Returns a promise that resolves with the state.
+
+## Get Play When Ready
+
+```js
+Tpstreams.getPlayWhenReady().then(console.log);
+```
+
+Checks if the player is set to start playback automatically. Returns a promise that resolves with a boolean value.
+
+## Set Play When Ready
+
+```js
+Tpstreams.setPlayWhenReady(true); // Enable autoplay
+```
+
+Controls whether the player should start playback automatically when loaded.
+
+## Get Playback Speed
+
+```js
+Tpstreams.getPlaybackSpeed().then(console.log);
+```
+
+Gets the current playback speed of the video. Returns a promise that resolves with the speed value.
+
+## Set Playback Speed
+
+```js
+Tpstreams.setPlaybackSpeed(1.5); // Play at 1.5x speed
+```
+
+Changes the playback speed of the video.
+
+## Release
+
+```js
+Tpstreams.release();
+```
+
+Releases the player resources, stopping playback and hiding the player UI. Once called, the player cannot be used again unless reinitialized.
 
 
-## Contributing
+# Player Events
 
-See the [contributing guide](CONTRIBUTING.md) to learn how to contribute to the repository and the development workflow.
+`Tpstreams` provides event listeners to handle various player events. Below are the available events and how to use them:
 
-## License
+## Listening to Events
 
-MIT
+To subscribe to player events, use the `NativeEventEmitter` from `react-native` with `TpstreamsModule`:
 
----
+```js
+import { NativeEventEmitter, NativeModules } from 'react-native';
 
-Made with [create-react-native-library](https://github.com/callstack/react-native-builder-bob)
+const { Tpstreams } = NativeModules;
+const eventEmitter = new NativeEventEmitter(Tpstreams);
+
+const subscription = eventEmitter.addListener('onPlaybackStateChanged', (state) => {
+  console.log('Playback State Changed:', state);
+});
+
+// Remember to remove the listener when unmounting
+subscription.remove();
+```
+
+## Available Events
+
+### onPlaybackStateChanged
+Triggered when the playback state changes.
+
+```js
+eventEmitter.addListener('onPlaybackStateChanged', (state) => {
+  console.log('Playback State:', state);
+});
+```
+
+### onAccessTokenExpired
+Triggered when the access token expires (requires refresh).
+
+```js
+eventEmitter.addListener('onAccessTokenExpired', () => {
+  console.log('Access token expired, please refresh.');
+});
+```
+
+### onMarkerCallback
+Triggered when a marker (timestamp) is reached during playback.
+
+```js
+eventEmitter.addListener('onMarkerCallback', (marker) => {
+  console.log('Marker reached:', marker);
+});
+```
+
+### onDeviceInfoChanged
+Triggered when the device information changes.
+
+```js
+eventEmitter.addListener('onDeviceInfoChanged', (info) => {
+  console.log('Device info changed:', info);
+});
+```
+
+### onFullScreenChanged
+Triggered when the fullscreen mode changes.
+
+```js
+eventEmitter.addListener('onFullScreenChanged', (isFullscreen) => {
+  console.log('Fullscreen mode:', isFullscreen);
+});
+```
+
+### onIsLoadingChanged
+Triggered when the player’s loading state changes.
+
+```js
+eventEmitter.addListener('onIsLoadingChanged', (isLoading) => {
+  console.log('Loading state changed:', isLoading);
+});
+```
+
+### onIsPlayingChanged
+Triggered when the player’s playing state changes.
+
+```js
+eventEmitter.addListener('onIsPlayingChanged', (isPlaying) => {
+  console.log('Playing state:', isPlaying);
+});
+```
+
+### onPlayerError
+Triggered when the player encounters an error.
+
+```js
+eventEmitter.addListener('onPlayerError', (error) => {
+  console.log('Player Error:', error);
+});
+```
+
+### onSeekBackIncrementChanged
+Triggered when the seek-back increment value changes.
+
+```js
+eventEmitter.addListener('onSeekBackIncrementChanged', (value) => {
+  console.log('Seek back increment changed:', value);
+});
+```
+
+### onSeekForwardIncrementChanged
+Triggered when the seek-forward increment value changes.
+
+```js
+eventEmitter.addListener('onSeekForwardIncrementChanged', (value) => {
+  console.log('Seek forward increment changed:', value);
+});
+```
+
+### onTimelineChanged
+Triggered when the timeline of the player changes.
+
+```js
+eventEmitter.addListener('onTimelineChanged', (timeline) => {
+  console.log('Timeline changed:', timeline);
+});
+```
+
+### onTracksChanged
+Triggered when the available tracks change (e.g., audio/video/subtitles).
+
+```js
+eventEmitter.addListener('onTracksChanged', (tracks) => {
+  console.log('Tracks changed:', tracks);
+});
+```
+
+# Download Module
+
+The `Download Module` in `Tpstreams` allows users to manage offline video downloads efficiently. This includes observing download progress, pausing, resuming, canceling, and deleting downloads.
+
+## Observing Download Data
+
+To start observing the download data, call the `observeDownloadData` method from `FragmentModule`.
+
+```js
+import { NativeModules, DeviceEventEmitter } from 'react-native';
+
+const { FragmentModule } = NativeModules;
+FragmentModule.observeDownloadData();
+```
+
+Once initialized, the module will emit events whenever the download data changes.
+
+## Listening to Download Events
+
+To listen for download state changes, use `DeviceEventEmitter`:
+
+```js
+const subscription = DeviceEventEmitter.addListener(
+  'onDownloadDataChanged',
+  (event) => {
+    console.log('Download data updated:', event.assets);
+  }
+);
+
+// Remember to remove the listener when unmounting
+subscription.remove();
+```
+
+## Managing Downloads
+
+### Pause Download
+Pauses an active download.
+
+```js
+FragmentModule.pauseDownload(videoId);
+```
+
+### Resume Download
+Resumes a paused download.
+
+```js
+FragmentModule.resumeDownload(videoId);
+```
+
+### Cancel Download
+Cancels an ongoing download.
+
+```js
+FragmentModule.cancelDownload(videoId);
+```
+
+### Delete Download
+Deletes a completed download from storage.
+
+```js
+FragmentModule.deleteDownload(videoId);
+```
+
+## Rendering a Download List
+
+Below is a sample implementation of a download list UI using `FlatList` in React Native:
+
+```js
+import React, { useState, useEffect } from 'react';
+import { SafeAreaView, Text, FlatList, View, Button, DeviceEventEmitter } from 'react-native';
+import { NativeModules } from 'react-native';
+
+const { FragmentModule } = NativeModules;
+
+const DownloadListScreen = () => {
+  const [downloads, setDownloads] = useState([]);
+
+  useEffect(() => {
+    FragmentModule.observeDownloadData();
+    const subscription = DeviceEventEmitter.addListener('onDownloadDataChanged', (event) => {
+      setDownloads(event.assets);
+    });
+    return () => subscription.remove();
+  }, []);
+
+  const renderItem = ({ item }) => (
+    <View>
+      <Text>{item.title} - {item.percentage}%</Text>
+      {item.status === 'DOWNLOADING' && <Button title="Pause" onPress={() => FragmentModule.pauseDownload(item.videoId)} />}
+      {item.status === 'COMPLETE' && <Button title="Delete" onPress={() => FragmentModule.deleteDownload(item.videoId)} />}
+      {item.status === 'PAUSED' && <Button title="Resume" onPress={() => FragmentModule.resumeDownload(item.videoId)} />}
+    </View>
+  );
+
+  return (
+    <SafeAreaView>
+      <FlatList data={downloads} keyExtractor={(item) => item.videoId} renderItem={renderItem} />
+    </SafeAreaView>
+  );
+};
+
+export default DownloadListScreen;
+```
+
+This component observes download events and dynamically updates the list with buttons for user interactions.
