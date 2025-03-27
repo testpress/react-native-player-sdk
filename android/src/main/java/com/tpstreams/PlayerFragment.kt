@@ -30,6 +30,8 @@ class PlayerFragment : Fragment() {
   private var accessToken :String = ""
   private var enableDownloadSupport :Boolean = true
   private var setAutoPlay :Boolean = true
+  private var startAt :Int = 0
+  private var offlineLicenseExpireTime :Int = 15
 
   private var accessTokenCallback : onAccessTokenCallbase? = null
 
@@ -45,6 +47,8 @@ class PlayerFragment : Fragment() {
       accessToken = bundle.getString("ACCESS_TOKEN") ?: ""
       enableDownloadSupport = bundle.getBoolean("ENABLE_DOWNLOAD_SUPPORT", true)
       setAutoPlay = bundle.getBoolean("AUTO_PLAY", true)
+      startAt = bundle.getInt("START_AT", 0)
+      offlineLicenseExpireTime = bundle.getInt("OFFLINE_LICENSE_EXPIRE_TIME", 15)
 
     }
   }
@@ -77,6 +81,8 @@ class PlayerFragment : Fragment() {
       .setAccessToken(accessToken)
       .enableDownloadSupport(enableDownloadSupport)
       .setAutoPlay(setAutoPlay)
+      .startAt(startAt.toLong())
+      .setOfflineLicenseExpireTime(offlineLicenseExpireTime)
       .build()
     requireActivity().runOnUiThread {
       player.load(parameters)

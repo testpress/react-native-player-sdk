@@ -32,6 +32,15 @@ class TpStreamsPlayerViewManager : SimpleViewManager<TpStreamsPlayerView>() {
         view.setAutoPlay(autoPlay)
     }
 
+    @ReactProp(name = "startAt")
+    fun setStartTime(view: TpStreamsPlayerView, startAt: Int?) {
+        view.setStartTime(startAt ?: 0)
+    }
+
+    @ReactProp(name = "offlineLicenseExpireTime")
+    fun setOfflineLicenseExpireTime(view: TpStreamsPlayerView, offlineLicenseExpireTime: Int?) {
+        view.setOfflineLicenseExpireTime(offlineLicenseExpireTime ?: 15)
+    }
 }
 
 

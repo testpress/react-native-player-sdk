@@ -17,6 +17,8 @@ class TpStreamsPlayerView @JvmOverloads constructor(
     private var accessToken: String? = null
     private var enableDownload: Boolean = true
     private var autoPlay :Boolean = true
+    private var startAt :Int = 0
+    private var offlineLicenseExpireTime :Int = 15
     private var fragmentModule: FragmentModule? = null
 
     private val job = SupervisorJob()
@@ -54,6 +56,16 @@ class TpStreamsPlayerView @JvmOverloads constructor(
         updateFragment()
     }
 
+    fun setStartTime(startAt: Int?) {
+        this.startAt = startAt ?: 0
+        updateFragment()
+    }
+
+    fun setOfflineLicenseExpireTime(offlineLicenseExpireTime: Int?) {
+        this.offlineLicenseExpireTime = offlineLicenseExpireTime ?: 15
+        updateFragment()
+    }
+
     private fun updateFragment() {
         if (!videoId.isNullOrEmpty() && !accessToken.isNullOrEmpty()) {
             updateJob?.cancel()
@@ -64,7 +76,9 @@ class TpStreamsPlayerView @JvmOverloads constructor(
                     videoId!!,
                     accessToken!!,
                     enableDownload,
-                    autoPlay ?: true
+                    autoPlay ?: true,
+                    startAt,
+                    offlineLicenseExpireTime,
                 )
             }
         }
