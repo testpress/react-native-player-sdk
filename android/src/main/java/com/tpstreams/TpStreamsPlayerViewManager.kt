@@ -39,7 +39,7 @@ class TpStreamsPlayerViewManager : SimpleViewManager<TpStreamsPlayerView>() {
 
     @ReactProp(name = "offlineLicenseExpireTime")
     fun setOfflineLicenseExpireTime(view: TpStreamsPlayerView, offlineLicenseExpireTime: Int?) {
-        view.setOfflineLicenseExpireTime(offlineLicenseExpireTime ?: 15)
+        view.setOfflineLicenseExpireTime(offlineLicenseExpireTime ?: 60 * 60 * 24 * 15)
     }
 }
 
