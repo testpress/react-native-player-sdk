@@ -31,7 +31,7 @@ class PlayerFragment : Fragment() {
   private var enableDownloadSupport :Boolean = true
   private var setAutoPlay :Boolean = true
   private var startAt :Int = 0
-  private var offlineLicenseExpireTime :Int = 15
+  private var offlineLicenseExpireTime :Int = 60 * 60 * 24 * 15 //15 days
 
   private var accessTokenCallback : onAccessTokenCallbase? = null
 
@@ -48,7 +48,7 @@ class PlayerFragment : Fragment() {
       enableDownloadSupport = bundle.getBoolean("ENABLE_DOWNLOAD_SUPPORT", true)
       setAutoPlay = bundle.getBoolean("AUTO_PLAY", true)
       startAt = bundle.getInt("START_AT", 0)
-      offlineLicenseExpireTime = bundle.getInt("OFFLINE_LICENSE_EXPIRE_TIME", 15)
+      offlineLicenseExpireTime = bundle.getInt("OFFLINE_LICENSE_EXPIRE_TIME", offlineLicenseExpireTime)
 
     }
   }

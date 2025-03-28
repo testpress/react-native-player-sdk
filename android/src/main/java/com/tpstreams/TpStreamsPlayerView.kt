@@ -18,7 +18,7 @@ class TpStreamsPlayerView @JvmOverloads constructor(
     private var enableDownload: Boolean = true
     private var autoPlay :Boolean = true
     private var startAt :Int = 0
-    private var offlineLicenseExpireTime :Int = 15
+    private var offlineLicenseExpireTime :Int = 60 * 60 * 24 * 15
     private var fragmentModule: FragmentModule? = null
 
     private val job = SupervisorJob()
@@ -62,7 +62,7 @@ class TpStreamsPlayerView @JvmOverloads constructor(
     }
 
     fun setOfflineLicenseExpireTime(offlineLicenseExpireTime: Int?) {
-        this.offlineLicenseExpireTime = offlineLicenseExpireTime ?: 15
+        this.offlineLicenseExpireTime = offlineLicenseExpireTime ?: 60 * 60 * 24 * 15
         updateFragment()
     }
 
