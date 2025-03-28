@@ -40,6 +40,8 @@ const App = () => {
     accessToken: 'ACCESS_TOKEN',
     enableDownload: false,
     autoPlay: true,
+    startAt: 0,
+    offlineLicenseExpireTime: 15,
     style: { width: '100%', height: 300 },
   });
 
@@ -66,13 +68,15 @@ Replace `ASSET_ID` and `ACCESS_TOKEN` with the actual assetId and accessToken of
 ## Player Props
 The player component accepts the following props:
 
-| Prop            | Type    | Required | Default                         | Description                                    |
-|----------------|---------|----------|---------------------------------|------------------------------------------------|
-| `videoId`      | string  | Yes      | -                               | The unique identifier of the video asset.      |
-| `accessToken`  | string  | Yes      | -                               | The authentication token required to access the video. |
-| `enableDownload` | boolean | No     | `true`                          | Enables or disables video download.           |
-| `autoPlay`     | boolean | No      | `true`                          | Controls whether the video should start playing automatically. |
-| `style`        | object  | No      | `{ width: '100%', height: 300 }` | Defines the player’s width and height.        |
+| Prop                      | Type    | Required | Default | Description                                            |
+|--------------------------|---------|----------|---------|--------------------------------------------------------|
+| `videoId`                | string  | Yes      | -       | The unique identifier of the video asset.              |
+| `accessToken`            | string  | Yes      | -       | The authentication token required to access the video. |
+| `enableDownload`         | boolean | No       | `true`  | Enables or disables video download.                   |
+| `autoPlay`               | boolean | No       | `true`  | Controls whether the video should start playing automatically. |
+| `startAt`                | number  | No       | `0`     | Start the video from a particular time (in seconds).  |
+| `offlineLicenseExpireTime` | number | No    | `15`    | DRM license expiration time in days.                  |
+| `style`                  | object  | No       | `{ width: '100%', height: 300 }` | Defines the player’s width and height. |
 
 # Player Methods
 
@@ -225,8 +229,11 @@ eventEmitter.addListener('onPlaybackStateChanged', (state) => {
 Triggered when the access token expires (requires refresh).
 
 ```js
-eventEmitter.addListener('onAccessTokenExpired', () => {
-  console.log('Access token expired, please refresh.');
+eventEmitter.addListener('onAccessTokenExpired', async () => {
+  console.log('Access token expired, fetching a new one...');
+  
+  const newToken = await fetchNewAccessToken(); // Fetch the new token from your API
+  Tpstreams.setNewAccessToken(newToken);
 });
 ```
 
