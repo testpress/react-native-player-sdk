@@ -75,7 +75,7 @@ The player component accepts the following props:
 | `enableDownload`         | boolean | No       | `true`  | Enables or disables video download.                   |
 | `autoPlay`               | boolean | No       | `true`  | Controls whether the video should start playing automatically. |
 | `startAt`                | number  | No       | `0`     | Start the video from a particular time (in seconds).  |
-| `offlineLicenseExpireTime` | number | No    | `15`    | DRM license expiration time in days.                  |
+| `offlineLicenseExpireTime` | number | No    | `1296000(15 days in seconds)`    | DRM license expiration time in seconds.                  |
 | `style`                  | object  | No       | `{ width: '100%', height: 300 }` | Defines the player’s width and height. |
 
 # Player Methods
