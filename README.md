@@ -217,7 +217,15 @@ subscription.remove();
 ## Available Events
 
 ### onPlaybackStateChanged
-Triggered when the playback state changes.
+This event notifies us when the player's playback state changes:
+
+| State | Value | Description |
+|--------|-------|------------|
+| `STATE_IDLE` | `1` | The player is idle and not ready to play. |
+| `STATE_BUFFERING` | `2` | The player is buffering (waiting for enough data). |
+| `STATE_READY` | `3` | The player is ready to play. |
+| `STATE_ENDED` | `4` | The playback has finished. |
+
 
 ```js
 eventEmitter.addListener('onPlaybackStateChanged', (state) => {
@@ -265,7 +273,8 @@ eventEmitter.addListener('onFullScreenChanged', (isFullscreen) => {
 ```
 
 ### onIsLoadingChanged
-Triggered when the player’s loading state changes.
+- `true`: The player is currently loading or buffering new data from the network.
+- `false`: The player has sufficient buffered content and can play without interruption.
 
 ```js
 eventEmitter.addListener('onIsLoadingChanged', (isLoading) => {
