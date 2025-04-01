@@ -147,6 +147,10 @@ class PlayerFragment : Fragment() {
       override fun onTracksChanged(tracks: Tracks) {
         sendEvent("onTracksChanged", tracks.toString())
       }
+
+      override fun onPlaybackSpeedChange(speed: Float) {
+        sendEvent("onPlaybackSpeedChanged", speed)
+      }
     })
   }
   // Core Player Controls
