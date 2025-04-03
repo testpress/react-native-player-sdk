@@ -1,6 +1,6 @@
 {
   "name": "react-native-tpstreams",
-  "version": "0.1.14",
+  "version": "0.1.15",
   "description": "Video Component for TPStreams",
   "source": "./src/index.tsx",
   "main": "./lib/commonjs/index.js",
