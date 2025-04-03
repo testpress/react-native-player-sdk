@@ -5,5 +5,6 @@ export type TpStreamsPlayerProps = {
   autoPlay?: boolean;
   startAt?: number;
   offlineLicenseExpireTime?: number;
+  downloadMetadata?: Record<string, string>;
   style?: import('react-native').ViewStyle;
 };

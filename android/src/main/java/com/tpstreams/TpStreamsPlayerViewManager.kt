@@ -3,6 +3,7 @@ package com.tpstreams
 import com.facebook.react.uimanager.SimpleViewManager
 import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.uimanager.annotations.ReactProp
+import com.facebook.react.bridge.ReadableMap
 
 class TpStreamsPlayerViewManager : SimpleViewManager<TpStreamsPlayerView>() {
 
@@ -40,6 +41,11 @@ class TpStreamsPlayerViewManager : SimpleViewManager<TpStreamsPlayerView>() {
     @ReactProp(name = "offlineLicenseExpireTime")
     fun setOfflineLicenseExpireTime(view: TpStreamsPlayerView, offlineLicenseExpireTime: Int?) {
         view.setOfflineLicenseExpireTime(offlineLicenseExpireTime ?: 60 * 60 * 24 * 15)
+    }
+
+    @ReactProp(name = "downloadMetadata")
+    fun setDownloadMetadata(view: TpStreamsPlayerView, downloadMetadata: ReadableMap?) {
+        downloadMetadata?.let { view.setDownloadMetadata(downloadMetadata) }
     }
 }
 

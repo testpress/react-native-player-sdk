@@ -16,6 +16,9 @@ import com.facebook.react.modules.core.DeviceEventManagerModule
 import com.tpstream.player.data.Asset
 import com.tpstream.player.offline.TpStreamDownloadManager
 import com.tpstream.player.TPStreamsSDK
+import com.facebook.react.bridge.ReadableMap
+import com.facebook.react.bridge.WritableNativeMap
+
 
 class FragmentModule(reactContext: ReactApplicationContext) : ReactContextBaseJavaModule(reactContext) {
 
@@ -35,7 +38,15 @@ class FragmentModule(reactContext: ReactApplicationContext) : ReactContextBaseJa
   }
 
   @ReactMethod
-  fun showCustomFragment(videoId: String, accessToken: String, enableDownload: Boolean, autoPlay: Boolean, startAt: Int, offlineLicenseExpireTime: Int) {
+  fun showCustomFragment(
+    videoId: String,
+    accessToken: String,
+    enableDownload: Boolean,
+    autoPlay: Boolean,
+    startAt: Int,
+    offlineLicenseExpireTime: Int,
+    downloadMetadata: ReadableMap?,
+  ) {
     Log.e("FragmentModule", "showCustomFragment() called")
     // Ensure the currentActivity is a FragmentActivity
     val activity = currentActivity as? FragmentActivity
@@ -51,6 +62,7 @@ class FragmentModule(reactContext: ReactApplicationContext) : ReactContextBaseJa
       bundle.putBoolean("AUTO_PLAY", autoPlay)
       bundle.putInt("START_AT", startAt)
       bundle.putInt("OFFLINE_LICENSE_EXPIRE_TIME", offlineLicenseExpireTime)
+      bundle.putSerializable("DOWNLOAD_METADATA", downloadMetadata?.toHashMapString())
       val fragment = PlayerFragment()
       fragment.setArguments(bundle)
 
@@ -115,7 +127,7 @@ class FragmentModule(reactContext: ReactApplicationContext) : ReactContextBaseJa
             assetMap.putString("percentage", asset.video.percentageDownloaded.toString())
             assetMap.putString("status", asset.video.downloadState?.name ?: "Unknown")
             assetMap.putString("duration", asset.video.duration.toString())
-
+            assetMap.putMap("metadata", asset.metadata?.toWritableMap() ?: null)
             assetsList.pushMap(assetMap)
           }
 
@@ -128,6 +140,27 @@ class FragmentModule(reactContext: ReactApplicationContext) : ReactContextBaseJa
         Log.e("FragmentModule", "Current activity is not a FragmentActivity")
       }
     }
+  }
+
+  fun ReadableMap.toHashMapString(): HashMap<String, String> {
+    val result = HashMap<String, String>()
+    val iterator = this.keySetIterator()
+    while (iterator.hasNextKey()) {
+        val key = iterator.nextKey()
+        val value = this.getString(key) // Ensuring values are strings
+        if (value != null) {
+            result[key] = value
+        }
+    }
+    return result
+  }
+
+  fun Map<String, String>.toWritableMap(): ReadableMap {
+    val writableMap: WritableMap = WritableNativeMap()
+    for ((key, value) in this) {
+        writableMap.putString(key, value)
+    }
+    return writableMap
   }
 
   @ReactMethod

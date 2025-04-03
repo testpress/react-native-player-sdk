@@ -32,6 +32,7 @@ class PlayerFragment : Fragment() {
   private var setAutoPlay :Boolean = true
   private var startAt :Int = 0
   private var offlineLicenseExpireTime :Int = 60 * 60 * 24 * 15 //15 days
+  private var downloadMetadata: HashMap<String, String>? = null
 
   private var accessTokenCallback : onAccessTokenCallbase? = null
 
@@ -49,7 +50,7 @@ class PlayerFragment : Fragment() {
       setAutoPlay = bundle.getBoolean("AUTO_PLAY", true)
       startAt = bundle.getInt("START_AT", 0)
       offlineLicenseExpireTime = bundle.getInt("OFFLINE_LICENSE_EXPIRE_TIME", offlineLicenseExpireTime)
-
+      downloadMetadata = bundle.getSerializable("DOWNLOAD_METADATA") as? HashMap<String, String>
     }
   }
 
@@ -85,8 +86,11 @@ class PlayerFragment : Fragment() {
       .setOfflineLicenseExpireTime(offlineLicenseExpireTime)
       .build()
     requireActivity().runOnUiThread {
-      player.load(parameters)
+      player.load(parameters, getMetadata())
     }
+  }
+  private fun getMetadata(): HashMap<String, String> {
+    return downloadMetadata ?: hashMapOf()
   }
 
   private fun sendEvent(eventName: String, params: Any?) {

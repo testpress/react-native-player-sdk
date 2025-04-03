@@ -6,6 +6,8 @@ import android.util.AttributeSet
 import android.widget.FrameLayout
 import androidx.fragment.app.FragmentActivity
 import com.facebook.react.bridge.ReactApplicationContext
+import com.facebook.react.bridge.ReadableMap
+import com.facebook.react.bridge.WritableMap
 import com.facebook.react.uimanager.ThemedReactContext
 
 class TpStreamsPlayerView @JvmOverloads constructor(
@@ -19,6 +21,7 @@ class TpStreamsPlayerView @JvmOverloads constructor(
     private var autoPlay :Boolean = true
     private var startAt :Int = 0
     private var offlineLicenseExpireTime :Int = 60 * 60 * 24 * 15
+    private var downloadMetadata: ReadableMap? = null
     private var fragmentModule: FragmentModule? = null
 
     private val job = SupervisorJob()
@@ -66,6 +69,11 @@ class TpStreamsPlayerView @JvmOverloads constructor(
         updateFragment()
     }
 
+    fun setDownloadMetadata(metadata: ReadableMap?) {
+        downloadMetadata = metadata ?: null
+        updateFragment()
+    }
+
     private fun updateFragment() {
         if (!videoId.isNullOrEmpty() && !accessToken.isNullOrEmpty()) {
             updateJob?.cancel()
@@ -79,6 +87,7 @@ class TpStreamsPlayerView @JvmOverloads constructor(
                     autoPlay ?: true,
                     startAt,
                     offlineLicenseExpireTime,
+                    downloadMetadata,
                 )
             }
         }
